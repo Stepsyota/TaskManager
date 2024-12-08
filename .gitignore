@@ -1,4 +1,7 @@
 # created by virtualenv automatically
+
+*.db
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
 
