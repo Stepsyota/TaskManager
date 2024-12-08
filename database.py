@@ -1,5 +1,3 @@
-from typing import Optional
-
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
@@ -15,8 +13,8 @@ class TaskDB(Base):
     __tablename__ = "tasks"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
-    completed = Column(Boolean, index=True)
-    description = Column(Optional[str])
+    completed = Column(Boolean, index=True, default=False)
+
 
 def get_db():
     db = Session()
