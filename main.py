@@ -4,8 +4,20 @@ from sqlalchemy.orm import Session
 
 from schemes import TaskADD
 from database import TaskDB, Base, engine, get_db
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Или укажите конкретный домен фронтенда
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 Base.metadata.create_all(bind=engine)
 
 
@@ -24,7 +36,7 @@ def create_task(task : TaskADD, db : Session  = Depends(get_db)):
         return {'message': f'Task {task.id} was failed', 'task': task}
 
 @app.get("/tasks/")
-def get_tasks(db : Session = Depends(get_db), completed : bool = None, limit : int = None):
+def get_tasks(completed : bool = None, limit : int = None, db : Session = Depends(get_db)):
     query = db.query(TaskDB)
     if completed:
         query = query.filter(TaskDB.completed == completed)
