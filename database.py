@@ -11,7 +11,7 @@ class Base(DeclarativeBase):
 
 class TaskDB(Base):
     __tablename__ = "tasks"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     title = Column(String, index=True)
     completed = Column(Boolean, index=True, default=False)
 
