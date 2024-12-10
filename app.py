@@ -54,6 +54,7 @@ def show_add_menu():
             }
             st.write(new_task)
             create_task(new_task)
+            st.rerun()
 
 def show_edit_menu(task):
     st.header(f"Редактирование задачи")
@@ -68,12 +69,14 @@ def show_edit_menu(task):
 
         if deleted:
             delete_task(task['id'])
+            st.rerun()
         elif submitted:
             st.success(f"Задача обновлена")
             task['title'] = title
             task['completed'] = completed
             update_task(task)
             st.session_state.show_edit_menu = False
+            st.rerun()
 
 def show_task_menu(task):
     st.subheader("Подробное описание задачи")
@@ -107,6 +110,8 @@ def show_all_tasks(tasks):
                 completed = st.checkbox("", value=task["completed"], key=f"chk_{task['id']}", disabled=True)
                 if completed != task["completed"]:
                     task["completed"] = completed
+                    update_task(task) ### !!!!!!!!!!
+                    st.rerun() ### !!!!!!!!!!
                     # Здесь можно добавить вызов API для обновления статуса на сервере
 
         if st.session_state.get(f"show_details_{task['id']}", False):
