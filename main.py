@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends
-from sqlalchemy import Integer, Boolean, String
 from sqlalchemy.orm import Session
 
 from schemes import TaskADD
@@ -27,13 +26,10 @@ def read_root():
 
 @app.post("/tasks/")
 def create_task(task : TaskADD, db : Session  = Depends(get_db)):
-    new_task = TaskDB(id =task.id, title = task.title, completed = task.completed)
-    try:
-        db.add(new_task)
-        db.commit()
-        return {'message': f'Task {task.id} was created', 'task': task}
-    except:
-        return {'message': f'Task {task.id} was failed', 'task': task}
+    new_task = TaskDB(title = task.title, completed = task.completed)
+    db.add(new_task)
+    db.commit()
+    return {'message' : f'Task {task.id} was created'}
 
 @app.get("/tasks/")
 def get_tasks(completed : bool = None, limit : int = None, db : Session = Depends(get_db)):
@@ -52,7 +48,7 @@ def delete_task(task_id : int, db : Session = Depends(get_db)):
     return {'message' : f'Task {task_id} was deleted'}
 
 @app.patch("/tasks/")
-def update_task(task_id : int, new_status : bool, db : Session = Depends(get_db)):
-    db.query(TaskDB).filter(TaskDB.id == task_id).update({TaskDB.completed :  new_status})
+def update_task(task : TaskADD, db : Session = Depends(get_db)):
+    db.query(TaskDB).filter(TaskDB.id == task.id).update({TaskDB.completed : task.completed, TaskDB.title : task.title})
     db.commit()
-    return {'message': f'Task {task_id} status was updated'}
+    return {'message': f'Task {task.id} status was updated'}
