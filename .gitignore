@@ -5,7 +5,9 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
 
-.idea/
+#txt file
+*.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -188,4 +190,4 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 # idea folder, uncomment if you don't need it
-# .idea
+.idea
