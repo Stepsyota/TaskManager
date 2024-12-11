@@ -15,7 +15,6 @@ def get_tasks():
         return {}
 
 def update_task(task):
-    st.write(task)
     response = requests.patch(f"{API_URL}/tasks", json=task)
     if response.status_code == 200:
         return response.json()
