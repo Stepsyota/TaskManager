@@ -49,10 +49,12 @@ def show_add_menu():
     st.header(f"Добавление задачи")
     with st.form("add_form"):
         title = st.text_input("Название задачи")
+        if not title:
+            st.warning("Название задачи не может быть пустым!")
         completed = st.checkbox("Задача выполнена")
         submitted = st.form_submit_button("Сохранить")
 
-        if submitted:
+        if submitted and title:
             st.success(f"Задача сохранена: {title}, выполнена: {completed}")
             st.session_state.show_add_menu = False
             new_task = {
@@ -68,6 +70,8 @@ def show_edit_menu(task):
     st.header(f"Редактирование задачи")
     with st.form(f"edit_form{task['id']}"):
         title = st.text_input("Название задачи", value= f"{task['title']}")
+        if not title:
+            st.warning("Название задачи не может быть пустым!")
         col1, col2, col3 = st.columns([2, 6, 2])
         with col1:
             submitted = st.form_submit_button("Сохранить")
@@ -77,7 +81,7 @@ def show_edit_menu(task):
         if deleted:
             delete_task(task['id'])
             st.rerun()
-        elif submitted:
+        elif submitted and title:
             st.success(f"Задача обновлена")
             task['title'] = title
             update_task(task)
