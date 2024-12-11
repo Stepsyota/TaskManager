@@ -83,39 +83,33 @@ def show_edit_menu(task):
 
 def show_task_menu(task):
     st.subheader("Подробное описание задачи")
-    st.write("---")  # Разделительная линия
+    st.write("---")
     st.markdown(f"**Название:** {task['title']}")
     st.markdown(f"**Выполнена:** {'Да' if task['completed'] else 'Нет'}")
-    #st.text(f"Описание задачи: {task['description']}")
     if st.button("Закрыть", key=f"close_details_{task['id']}"):
         st.session_state[f"show_details_{task['id']}"] = False
-    st.write("---")  # Разделительная линия
+    st.write("---")
 
 def show_all_tasks(tasks):
     for task in tasks:
-        # Используем контейнер для каждой задачи
         with st.container(border=True):
-            # Настраиваем разметку с колонками
             col1, col2, col3 = st.columns([8, 1, 1])  # Название задачи, кнопка, чекбокс
-
-            with col1: # Название
-                if st.button(task["title"], key=f"title_{task['id']}", use_container_width=True):  # Название задачи - интерактивная кнопка
-                    # Переключаем состояние меню описания задачи
+            with col1:
+                if st.button(task["title"], key=f"title_{task['id']}", use_container_width=True):
                     current_state = st.session_state.get(f"show_details_{task['id']}", False)
                     st.session_state[f"show_details_{task['id']}"] = not current_state
 
-            with col2: # "Редактировать"
+            with col2:
                 if st.button("✏️", key=f"edit_{task['id']}"):
                     current_state = st.session_state.get(f"show_edit_{task['id']}", False)
                     st.session_state[f"show_edit_{task['id']}"] = not current_state
 
-            with col3: # Чекбокс
+            with col3:
                 completed = st.checkbox("", value=task["completed"], key=f"chk_{task['id']}")
                 if completed != task["completed"]:
                     task["completed"] = completed
-                    update_task(task) ### !!!!!!!!!!
-                    st.rerun() ### !!!!!!!!!!
-                    # Здесь можно добавить вызов API для обновления статуса на сервере
+                    update_task(task)
+                    st.rerun()
 
         if st.session_state.get(f"show_details_{task['id']}", False):
             show_task_menu(task)
