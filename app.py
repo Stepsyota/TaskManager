@@ -23,9 +23,7 @@ def update_task(task):
         st.error("Failed to fetch tasks")
 
 def delete_task(task_id):
-    params = {}
-    params['task_id'] = task_id
-    response = requests.delete(f"{API_URL}/tasks", params=params)
+    response = requests.delete(f"{API_URL}/tasks", params={'task_id' : task_id})
     if response.status_code == 200:
         return response.json()
     else:
@@ -68,7 +66,6 @@ def show_edit_menu(task):
     st.header(f"Редактирование задачи")
     with st.form("edit_form"):
         title = st.text_input("Название задачи", value= f"{task['title']}")
-        completed = st.checkbox("Задача выполнена", value=f"{task['completed']}")
         col1, col2, col3 = st.columns([2, 6, 2])
         with col1:
             submitted = st.form_submit_button("Сохранить")
@@ -81,7 +78,6 @@ def show_edit_menu(task):
         elif submitted:
             st.success(f"Задача обновлена")
             task['title'] = title
-            task['completed'] = completed
             update_task(task)
             st.session_state.show_edit_menu = False
             st.rerun()
@@ -115,7 +111,7 @@ def show_all_tasks(tasks):
                     st.session_state[f"show_edit_{task['id']}"] = not current_state
 
             with col3: # Чекбокс
-                completed = st.checkbox("", value=task["completed"], key=f"chk_{task['id']}", disabled=True)
+                completed = st.checkbox("", value=task["completed"], key=f"chk_{task['id']}")
                 if completed != task["completed"]:
                     task["completed"] = completed
                     update_task(task) ### !!!!!!!!!!
