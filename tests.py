@@ -29,6 +29,39 @@ def test_get_item():
 
     response_delete = client.delete("/tasks/", params={'task_id': task_id})
 
+def test_get_item_by_status_TRUE():
+    response1 = client.post("/tasks/", json={"title": "Another Task", "completed": True})
+    task_id1 = response1.json()['id']
+    response2 = client.post("/tasks/", json={"title": "And Another Task", "completed": False})
+    task_id2 = response2.json()['id']
+    response3 = client.post("/tasks/", json={"title": "And And Another Task", "completed": True})
+    task_id3 = response3.json()['id']
+
+    response_get = client.get("/tasks/", params={'completed' : True})
+    assert response_get.status_code == 200
+    for task in response_get.json():
+            assert task["completed"] == True
+
+    response_delete = client.delete("/tasks/", params={'task_id': task_id1})
+    response_delete = client.delete("/tasks/", params={'task_id': task_id2})
+    response_delete = client.delete("/tasks/", params={'task_id': task_id3})
+
+def test_get_item_by_lmit_2():
+    response1 = client.post("/tasks/", json={"title": "Another Task", "completed": True})
+    task_id1 = response1.json()['id']
+    response2 = client.post("/tasks/", json={"title": "And Another Task", "completed": False})
+    task_id2 = response2.json()['id']
+    response3 = client.post("/tasks/", json={"title": "And And Another Task", "completed": True})
+    task_id3 = response3.json()['id']
+
+    response_get = client.get("/tasks/", params={'limit' : 2})
+    assert response_get.status_code == 200
+    assert len(response_get.json()) == 2
+
+    response_delete = client.delete("/tasks/", params={'task_id': task_id1})
+    response_delete = client.delete("/tasks/", params={'task_id': task_id2})
+    response_delete = client.delete("/tasks/", params={'task_id': task_id3})
+
 def test_update_item():
     response = client.post("/tasks/", json={"title": "Task to Update", "completed": False})
     task_id = response.json()["id"]
