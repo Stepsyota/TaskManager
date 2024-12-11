@@ -64,7 +64,7 @@ def show_add_menu():
 
 def show_edit_menu(task):
     st.header(f"Редактирование задачи")
-    with st.form("edit_form"):
+    with st.form(f"edit_form{task['id']}"):
         title = st.text_input("Название задачи", value= f"{task['title']}")
         col1, col2, col3 = st.columns([2, 6, 2])
         with col1:
