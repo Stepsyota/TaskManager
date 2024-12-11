@@ -4,6 +4,8 @@ import requests
 API_URL = 'http://127.0.0.1:8000/'
 st.title("Task Manager")
 
+email = 'zaglyshka@gate.not'
+
 def get_tasks():
     response = requests.get(f"{API_URL}/tasks")
     if response.status_code == 200:
@@ -32,6 +34,12 @@ def delete_task(task_id):
 def create_task(task):
     response = requests.post(f"{API_URL}/tasks", json=task)
     if response.status_code == 200:
+        params_email = {'email' : email}
+        response_email = requests.post(f"{API_URL}/send-notification/{email}", params=params_email)
+        if response_email.status_code == 200:
+            st.write(response_email)
+        else:
+            st.write('Failed to send email')
         return response.json()
     else:
         st.error("Failed to fetch tasks")
