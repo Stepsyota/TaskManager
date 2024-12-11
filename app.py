@@ -2,12 +2,15 @@ import streamlit as st
 import requests
 
 API_URL = 'http://127.0.0.1:8000/'
-st.title("Task Manager")
+
 
 email = 'zaglyshka@gate.not'
 
-def get_tasks():
-    response = requests.get(f"{API_URL}/tasks")
+st.title("Task Manager")
+filter_button = st.sidebar.selectbox("Filter by", ["default", "status", "limit"])
+
+def get_tasks(status : bool = None, limit : int = None):
+    response = requests.get(f"{API_URL}/tasks", params={'completed' : status, 'limit' : limit})
     if response.status_code == 200:
         return response.json()
     else:
@@ -123,4 +126,16 @@ def show_all_tasks(tasks):
     if st.session_state.get(f"show_add_menu", False):
         show_add_menu()
 
-show_all_tasks(get_tasks())
+if filter_button == 'default':
+    show_all_tasks(get_tasks())
+
+elif filter_button == 'status':
+    status_seg = st.sidebar.segmented_control("Choice the filter of tasks", ['Completed', 'Not completed'], default='Completed')
+    status = True
+    if status_seg == 'Not completed':
+        status = False
+    show_all_tasks(get_tasks(status))
+
+elif filter_button == 'limit':
+    limit = st.sidebar.slider(label='Limit of tasks', max_value=20, min_value=1)
+    show_all_tasks(get_tasks(None, limit))

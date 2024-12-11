@@ -41,11 +41,11 @@ def create_task(task : TaskADD, db : Session  = Depends(get_db)):
     return new_task
 
 @app.get("/tasks/")
-def get_tasks(completed : bool = None, limit : int = None, db : Session = Depends(get_db)):
+def get_tasks(completed : bool | None = None, limit : int | None = None, db : Session = Depends(get_db)):
     query = db.query(TaskDB)
-    if completed:
+    if completed != None:
         query = query.filter(TaskDB.completed == completed)
-    if limit:
+    elif limit != None:
         query = query.limit(limit)
     return query.all()
 
